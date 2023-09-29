@@ -1,0 +1,33 @@
+﻿@using la_mia_pizzeria_static.Models;
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "_Layout";
+    var allPizzas = PizzaStore.GetAllPizzas();
+}
+
+<table class="table">
+    <thead>
+        <tr class="text-center">
+            <th scope="col">ID</th>
+            <th scope="col">Photo</th>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var pizza in allPizzas)
+        {
+        <tr class="text-center align-middle">
+            <th scope="row" class="text-center">@pizza.Id</th>
+            <td>
+                    <img class="align-self-center" style="width: 60px; height:60px" src="@pizza.PhotoUrl" />
+            </td>
+            <td>@pizza.Name</td>
+            <td>@pizza.Description</td>
+            <td>@pizza.Price €</td>
+        </tr>   
+        }
+    </tbody>
+</table>
