@@ -6,7 +6,7 @@
         var returnUrl = $"{routeUrl}{qsPath}";
         //Console.WriteLine(returnUrl);
 
-        if (returnUrl == "/")
+        if (returnUrl == "/" || returnUrl.Contains("Pizza"))
         {
             return "bg-secondary";
         }
