@@ -1,4 +1,5 @@
-﻿using la_mia_pizzeria_crud_mvc.Models;
+﻿using la_mia_pizzeria_crud_mvc.Database;
+using la_mia_pizzeria_crud_mvc.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -15,12 +16,12 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
 
         public IActionResult Index()
         {
-            return View();
-        }
+            using (PizzaContext db = new PizzaContext())
+            {
+                List<Pizza> pizzas = db.Pizzas.ToList<Pizza>();
 
-        public IActionResult UserIndex()
-        {
-            return View();
+                return View("Index", pizzas);
+            }
         }
         public IActionResult Privacy()
         {

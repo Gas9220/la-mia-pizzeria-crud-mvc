@@ -1,4 +1,4 @@
-﻿using la_mia_pizzeria_static.Models;
+﻿using la_mia_pizzeria_crud_mvc.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace la_mia_pizzeria_crud_mvc.Database
