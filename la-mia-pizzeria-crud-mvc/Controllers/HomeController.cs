@@ -23,10 +23,6 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
                 return View("Index", pizzas);
             }
         }
-        public IActionResult Privacy()
-        {
-            return View();
-        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
