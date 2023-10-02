@@ -1,6 +1,7 @@
 ﻿using la_mia_pizzeria_crud_mvc.Database;
 using la_mia_pizzeria_crud_mvc.Models;
 using Microsoft.AspNetCore.Mvc;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace la_mia_pizzeria_crud_mvc.Controllers
 {
@@ -32,5 +33,36 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
                 }
             }
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Pizza data)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("Create", data);
+            }
+            using (PizzaContext context = new PizzaContext())
+            {
+                Pizza newPizza = new Pizza();
+
+                newPizza.Name = data.Name;
+                newPizza.Description = data.Description;
+                newPizza.Price = data.Price;
+                newPizza.PhotoUrl = data.PhotoUrl;
+
+                context.Pizzas.Add(newPizza);
+                context.SaveChanges();
+
+                return RedirectToAction("Index");
+            }
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View("Create");
+        }
+
     }
 }
