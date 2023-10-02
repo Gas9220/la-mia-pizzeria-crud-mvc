@@ -8,21 +8,25 @@
         <div class="mb-3">
             <strong>Name:</strong>
             <input asp-for="Name" class="d-block w-100" />
+            <span asp-validation-for="Name" class="text-danger"></span>
         </div>
         <div class="mb-3">
             <strong>Description:</strong>
             <input asp-for="Description" class="d-block w-100" />
+            <span asp-validation-for="Description" class="text-danger"></span>
         </div>
         <div class="mb-3">
             <strong>Photo:</strong>
             <input asp-for="PhotoUrl" class="d-block w-100" />
+            <span asp-validation-for="PhotoUrl" class="text-danger"></span>
         </div>
         <div class="mb-3">
             <strong>Price:</strong>
             <input asp-for="Price" class="d-block w-100" />
+            <span asp-validation-for="Price" class="text-danger"></span>
         </div>
         <div class="text-end">
-            <input type="submit" class="btn btn-small btn-secondary" value="save">
+            <input type="submit" class="btn btn-small btn-secondary" value="Save">
         </div>
     </form>
 </div>
