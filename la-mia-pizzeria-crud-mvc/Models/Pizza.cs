@@ -13,11 +13,14 @@ namespace la_mia_pizzeria_crud_mvc.Models
 
         [Column("photo_url")]
         [Url(ErrorMessage = "Invalid url format")]
+        [Required(ErrorMessage = "Url can't be empty")]
         public string PhotoUrl { get; set; }
 
+        [Required(ErrorMessage = "Description can't be empty")]
         [StringLength(500, ErrorMessage = "Max 500 characters")]
         public string Description { get; set; }
 
+        [Required(ErrorMessage = "Price can't be empty")]
         [Range(1, 150, ErrorMessage = "Price should be between 1€ and 150€")]
         public float Price { get; set; }
 
