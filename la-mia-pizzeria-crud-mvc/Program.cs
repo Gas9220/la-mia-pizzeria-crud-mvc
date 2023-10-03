@@ -1,4 +1,5 @@
 using la_mia_pizzeria_crud_mvc.CustomLoggers;
+using la_mia_pizzeria_crud_mvc.Database;
 
 namespace la_mia_pizzeria_crud_mvc
 {
@@ -10,7 +11,8 @@ namespace la_mia_pizzeria_crud_mvc
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddScoped<ICustomLogger, CustomFileLogger>();
+            builder.Services.AddScoped<ICustomLogger, CustomFileLogger>(); 
+            builder.Services.AddScoped<PizzaContext, PizzaContext>();
 
             var app = builder.Build();
 

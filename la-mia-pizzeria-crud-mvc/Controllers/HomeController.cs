@@ -9,40 +9,36 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
     public class HomeController : Controller
     {
         private ICustomLogger _myLogger;
+        private PizzaContext _myDatabase;
 
-        public HomeController(ICustomLogger _logger)
+        public HomeController(ICustomLogger _logger, PizzaContext myDatabase)
         {
             _myLogger = _logger;
+            _myDatabase = myDatabase;
         }
 
         public IActionResult Index()
         {
-            using (PizzaContext db = new PizzaContext())
-            {
-                _myLogger.WriteLog("User visit index page", "READ");
+            _myLogger.WriteLog("User visit index page", "READ");
 
-                List<Pizza> pizzas = db.Pizzas.ToList<Pizza>();
+            List<Pizza> pizzas = _myDatabase.Pizzas.ToList<Pizza>();
 
-                return View("Index", pizzas);
-            }
+            return View("Index", pizzas);
         }
 
         public IActionResult Details(int id)
         {
             _myLogger.WriteLog($"User visit details page for id {id}", "READ");
 
-            using (PizzaContext db = new PizzaContext())
-            {
-                Pizza? foundedPizza = db.Pizzas.Where(pizza => pizza.Id == id).FirstOrDefault();
+            Pizza? foundedPizza = _myDatabase.Pizzas.Where(pizza => pizza.Id == id).FirstOrDefault();
 
-                if (foundedPizza == null)
-                {
-                    return NotFound($"Nessuna pizza trovata con l'id {id} ");
-                }
-                else
-                {
-                    return View("Details", foundedPizza);
-                }
+            if (foundedPizza == null)
+            {
+                return NotFound($"Nessuna pizza trovata con l'id {id} ");
+            }
+            else
+            {
+                return View("Details", foundedPizza);
             }
         }
 

@@ -8,40 +8,36 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
     public class PizzaController : Controller
     {
         private ICustomLogger _myLogger;
+        private PizzaContext _myDatabase;
 
-        public PizzaController(ICustomLogger _logger)
+        public PizzaController(ICustomLogger _logger, PizzaContext myDatabase)
         {
             _myLogger = _logger;
+            _myDatabase = myDatabase;
         }
 
         public IActionResult Index()
         {
-            using (PizzaContext db = new PizzaContext())
-            {
-                _myLogger.WriteLog("Admin visit index page", "READ");
+            _myLogger.WriteLog("Admin visit index page", "READ");
 
-                List<Pizza> pizzas = db.Pizzas.ToList<Pizza>();
+            List<Pizza> pizzas = _myDatabase.Pizzas.ToList<Pizza>();
 
-                return View("Index", pizzas);
-            }
+            return View("Index", pizzas);
         }
 
         public IActionResult Details(int id)
         {
             _myLogger.WriteLog($"Admin visit details page for {id}", "READ");
 
-            using (PizzaContext db = new PizzaContext())
-            {
-                Pizza? foundedPizza = db.Pizzas.Where(pizza => pizza.Id == id).FirstOrDefault();
+            Pizza? foundedPizza = _myDatabase.Pizzas.Where(pizza => pizza.Id == id).FirstOrDefault();
 
-                if (foundedPizza == null)
-                {
-                    return NotFound($"Nessuna pizza trovata con l'id {id} ");
-                }
-                else
-                {
-                    return View("Details", foundedPizza);
-                }
+            if (foundedPizza == null)
+            {
+                return NotFound($"Nessuna pizza trovata con l'id {id} ");
+            }
+            else
+            {
+                return View("Details", foundedPizza);
             }
         }
 
@@ -55,20 +51,17 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
             {
                 return View("Create", data);
             }
-            using (PizzaContext context = new PizzaContext())
-            {
-                Pizza newPizza = new Pizza();
+            Pizza newPizza = new Pizza();
 
-                newPizza.Name = data.Name;
-                newPizza.Description = data.Description;
-                newPizza.Price = data.Price;
-                newPizza.PhotoUrl = data.PhotoUrl;
+            newPizza.Name = data.Name;
+            newPizza.Description = data.Description;
+            newPizza.Price = data.Price;
+            newPizza.PhotoUrl = data.PhotoUrl;
 
-                context.Pizzas.Add(newPizza);
-                context.SaveChanges();
+            _myDatabase.Pizzas.Add(newPizza);
+            _myDatabase.SaveChanges();
 
-                return RedirectToAction("Index");
-            }
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
@@ -83,18 +76,15 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
         {
             _myLogger.WriteLog("Admin visit edit new pizza page", "EDIT");
 
-            using (PizzaContext context = new PizzaContext())
-            {
-                Pizza? pizzaToEdit = context.Pizzas.Where(pizza => pizza.Id == id).FirstOrDefault();
+            Pizza? pizzaToEdit = _myDatabase.Pizzas.Where(pizza => pizza.Id == id).FirstOrDefault();
 
-                if (pizzaToEdit == null)
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    return View(pizzaToEdit);
-                }
+            if (pizzaToEdit == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return View(pizzaToEdit);
             }
         }
 
@@ -109,25 +99,22 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
                 return View("Edit", data);
             }
 
-            using (PizzaContext context = new PizzaContext())
+            Pizza? pizzaToEdit = _myDatabase.Pizzas.Where(pizza => pizza.Id == id).FirstOrDefault();
+
+            if (pizzaToEdit != null)
             {
-                Pizza? pizzaToEdit = context.Pizzas.Where(pizza => pizza.Id == id).FirstOrDefault();
+                pizzaToEdit.Name = data.Name;
+                pizzaToEdit.Description = data.Description;
+                pizzaToEdit.Price = data.Price;
+                pizzaToEdit.PhotoUrl = data.PhotoUrl;
 
-                if (pizzaToEdit != null)
-                {
-                    pizzaToEdit.Name = data.Name;
-                    pizzaToEdit.Description = data.Description;
-                    pizzaToEdit.Price = data.Price;
-                    pizzaToEdit.PhotoUrl = data.PhotoUrl;
+                _myDatabase.SaveChanges();
 
-                    context.SaveChanges();
-
-                    return RedirectToAction("Details", "Pizza", new { id = pizzaToEdit.Id });
-                }
-                else
-                {
-                    return NotFound();
-                }
+                return RedirectToAction("Details", "Pizza", new { id = pizzaToEdit.Id });
+            }
+            else
+            {
+                return NotFound();
             }
         }
 
@@ -137,20 +124,17 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
         {
             _myLogger.WriteLog($"Admin delete pizza with {id}", "DELETE");
 
-            using (PizzaContext context = new PizzaContext())
-            {
-                Pizza? pizzaToDelete = context.Pizzas.Where(pizza => pizza.Id == id).FirstOrDefault();
+            Pizza? pizzaToDelete = _myDatabase.Pizzas.Where(pizza => pizza.Id == id).FirstOrDefault();
 
-                if (pizzaToDelete != null)
-                {
-                    context.Pizzas.Remove(pizzaToDelete);
-                    context.SaveChanges();
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    return NotFound();
-                }
+            if (pizzaToDelete != null)
+            {
+                _myDatabase.Pizzas.Remove(pizzaToDelete);
+                _myDatabase.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return NotFound();
             }
         }
     }
