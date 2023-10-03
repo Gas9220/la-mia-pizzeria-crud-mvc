@@ -92,7 +92,7 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
 
             using (PizzaContext context = new PizzaContext())
             {
-                Pizza? pizzaToEdit = context.Pizzas.Where(pizza => pizza.Id != id).FirstOrDefault();
+                Pizza? pizzaToEdit = context.Pizzas.Where(pizza => pizza.Id == id).FirstOrDefault();
 
                 if (pizzaToEdit != null)
                 {
@@ -110,6 +110,13 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
                     return NotFound();
                 }
             }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id)
+        {
+            return NotFound();
         }
     }
 }
