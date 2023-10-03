@@ -68,7 +68,7 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
         {
             using (PizzaContext context = new PizzaContext())
             {
-                Pizza pizzaToEdit = context.Pizzas.Where(pizza => pizza.Id == id).FirstOrDefault();
+                Pizza? pizzaToEdit = context.Pizzas.Where(pizza => pizza.Id == id).FirstOrDefault();
 
                 if (pizzaToEdit == null)
                 {
@@ -77,6 +77,37 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
                 else
                 {
                     return View(pizzaToEdit);
+                }
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, Pizza data)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("Edit", data);
+            }
+
+            using (PizzaContext context = new PizzaContext())
+            {
+                Pizza? pizzaToEdit = context.Pizzas.Where(pizza => pizza.Id != id).FirstOrDefault();
+
+                if (pizzaToEdit != null)
+                {
+                    pizzaToEdit.Name = data.Name;
+                    pizzaToEdit.Description = data.Description;
+                    pizzaToEdit.Price = data.Price;
+                    pizzaToEdit.PhotoUrl = data.PhotoUrl;
+
+                    context.SaveChanges();
+
+                    return RedirectToAction("Details", "Pizza", new { id = pizzaToEdit.Id });
+                }
+                else
+                {
+                    return NotFound();
                 }
             }
         }
