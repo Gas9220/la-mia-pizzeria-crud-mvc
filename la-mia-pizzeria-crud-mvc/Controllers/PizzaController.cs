@@ -1,7 +1,6 @@
 ﻿using la_mia_pizzeria_crud_mvc.Database;
 using la_mia_pizzeria_crud_mvc.Models;
 using Microsoft.AspNetCore.Mvc;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace la_mia_pizzeria_crud_mvc.Controllers
 {
@@ -64,5 +63,22 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
             return View("Create");
         }
 
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            using (PizzaContext context = new PizzaContext())
+            {
+                Pizza pizzaToEdit = context.Pizzas.Where(pizza => pizza.Id == id).FirstOrDefault();
+
+                if (pizzaToEdit == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return View(pizzaToEdit);
+                }
+            }
+        }
     }
 }
