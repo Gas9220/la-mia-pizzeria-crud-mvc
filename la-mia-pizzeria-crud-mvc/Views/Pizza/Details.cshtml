@@ -5,9 +5,14 @@
         Back
     </a>
     <h3>Dettaglio pizza</h3>
-    <a class="btn btn-secondary btn-sm me-2" href="@Url.Action("Edit", new { id = @Model.Id })">
-        Edit
-    </a>
+    <div class="d-flex">
+        <a class="btn btn-secondary btn-sm me-2" href="@Url.Action("Edit", new { id = @Model.Id })">
+            Edit
+        </a>
+        <form asp-controller="Pizza" asp-action="Delete" asp-route-id="@Model.Id" method="post">
+            <button type="submit" class="btn btn-danger btn-sm me-2">Delete</button>
+        </form>
+    </div>
 </div>
 <div class="container py-2">
     <div class="row">
