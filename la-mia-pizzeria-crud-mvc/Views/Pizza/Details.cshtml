@@ -1,10 +1,13 @@
 ﻿@model Pizza
 
-<div class="d-flex pt-2 align-items-center">
+<div class="d-flex pt-2 align-items-center justify-content-between">
     <a class="btn btn-secondary btn-sm me-2" href="@Url.Action("Index")">
         Back
     </a>
     <h3>Dettaglio pizza</h3>
+    <a class="btn btn-secondary btn-sm me-2" href="@Url.Action("Edit", new { id = @Model.Id })">
+        Edit
+    </a>
 </div>
 <div class="container py-2">
     <div class="row">
