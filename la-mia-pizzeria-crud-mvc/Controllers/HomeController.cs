@@ -1,4 +1,5 @@
-﻿using la_mia_pizzeria_crud_mvc.Database;
+﻿using la_mia_pizzeria_crud_mvc.CustomLoggers;
+using la_mia_pizzeria_crud_mvc.Database;
 using la_mia_pizzeria_crud_mvc.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -7,17 +8,19 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private ICustomLogger _myLogger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ICustomLogger _logger)
         {
-            _logger = logger;
+            _myLogger = _logger;
         }
 
         public IActionResult Index()
         {
             using (PizzaContext db = new PizzaContext())
             {
+                _myLogger.WriteLog("User visit index page", "READ");
+
                 List<Pizza> pizzas = db.Pizzas.ToList<Pizza>();
 
                 return View("Index", pizzas);
@@ -26,6 +29,8 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
 
         public IActionResult Details(int id)
         {
+            _myLogger.WriteLog($"User visit details page for id {id}", "READ");
+
             using (PizzaContext db = new PizzaContext())
             {
                 Pizza? foundedPizza = db.Pizzas.Where(pizza => pizza.Id == id).FirstOrDefault();
