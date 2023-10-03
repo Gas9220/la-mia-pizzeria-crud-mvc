@@ -4,7 +4,8 @@
     {
         public void WriteLog(string message, string operation)
         {
-            File.AppendAllText(AppDomain.CurrentDomain.BaseDirectory + "//log.txt", $"{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")} LOG: {message} OPERATION: {operation}\n");
+            // projectFolder/bin/net7.0/log.txt
+            File.AppendAllText(AppDomain.CurrentDomain.BaseDirectory + "\\log.txt", $"{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")} LOG: {message} OPERATION: {operation}\n");
         }
     }
 }
