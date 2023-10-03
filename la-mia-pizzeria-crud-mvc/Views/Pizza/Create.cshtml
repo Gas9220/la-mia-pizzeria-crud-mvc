@@ -2,6 +2,6 @@
     <h2>New pizza details</h2>
     <form asp-controller="Pizza" asp-action="Create" method="post">
         @Html.AntiForgeryToken()
-        <partial name="_AddEditFormFields.cshtml" />
+        <partial name="../Shared/_AddEditFormFields.cshtml" />
     </form>
 </div>
