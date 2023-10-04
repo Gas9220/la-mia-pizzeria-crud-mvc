@@ -26,6 +26,10 @@ namespace la_mia_pizzeria_crud_mvc.Models
         [Range(1, 150, ErrorMessage = "Price should be between 1€ and 150€")]
         public float Price { get; set; }
 
+        [Column("category_id")]
+        public int? CategoryId { get; set; }
+        public Category? Category { get; set; }
+
         public Pizza() { }
 
         public Pizza(int id, string name, string photoUrl, string description, float price) { 
