@@ -95,18 +95,24 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
             }
             else
             {
+                List<Category> categories = _myDatabase.Categories.ToList();
+                PizzaFormModel model = new PizzaFormModel();
+                model.Pizza = pizzaToEdit;
+                model.Categories = categories;
                 return View(pizzaToEdit);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Pizza data)
+        public IActionResult Edit(int id, PizzaFormModel data)
         {
             _myLogger.WriteLog($"Admin edit pizza with {id}", "EDIT");
 
             if (!ModelState.IsValid)
             {
+                List<Category> categories = _myDatabase.Categories.ToList();
+                data.Categories = categories;
                 return View("Edit", data);
             }
 
@@ -114,10 +120,11 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
 
             if (pizzaToEdit != null)
             {
-                pizzaToEdit.Name = data.Name;
-                pizzaToEdit.Description = data.Description;
-                pizzaToEdit.Price = data.Price;
-                pizzaToEdit.PhotoUrl = data.PhotoUrl;
+                pizzaToEdit.Name = data.Pizza.Name;
+                pizzaToEdit.Description = data.Pizza.Description;
+                pizzaToEdit.Price = data.Pizza.Price;
+                pizzaToEdit.PhotoUrl = data.Pizza.PhotoUrl;
+                pizzaToEdit.CategoryId = data.Pizza.CategoryId;
 
                 _myDatabase.SaveChanges();
 
