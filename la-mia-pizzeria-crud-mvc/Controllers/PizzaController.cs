@@ -2,6 +2,7 @@
 using la_mia_pizzeria_crud_mvc.Database;
 using la_mia_pizzeria_crud_mvc.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace la_mia_pizzeria_crud_mvc.Controllers
 {
@@ -29,11 +30,11 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
         {
             _myLogger.WriteLog($"Admin visit details page for {id}", "READ");
 
-            Pizza? foundedPizza = _myDatabase.Pizzas.Where(pizza => pizza.Id == id).FirstOrDefault();
+            Pizza? foundedPizza = _myDatabase.Pizzas.Where(pizza => pizza.Id == id).Include(pizza => pizza.Category).FirstOrDefault();
 
             if (foundedPizza == null)
             {
-                return NotFound($"Nessuna pizza trovata con l'id {id} ");
+                return NotFound($"No pizza found with id: {id} ");
             }
             else
             {
@@ -99,7 +100,7 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
                 PizzaFormModel model = new PizzaFormModel();
                 model.Pizza = pizzaToEdit;
                 model.Categories = categories;
-                return View(pizzaToEdit);
+                return View(model);
             }
         }
 
