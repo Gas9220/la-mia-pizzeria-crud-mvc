@@ -21,6 +21,10 @@
             <div class="ms-5">
                 <h6>ID: @Model.Id</h6>
                 <h6>Name: @Model.Name</h6>
+                @if (Model.Category != null)
+                {
+                    <h6>Category: @Model.Category.Name</h6>
+                }
                 <p class="mb-1">Description: @Model.Description</p>
                 <span>Price: @Model.Price €</span>
             </div>

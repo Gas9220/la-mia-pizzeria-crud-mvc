@@ -43,20 +43,24 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Pizza data)
+        public IActionResult Create(PizzaFormModel data)
         {
             _myLogger.WriteLog("Admin create new pizza", "CREATE");
 
             if (!ModelState.IsValid)
             {
+                List<Category> categories = _myDatabase.Categories.ToList();
+                data.Categories = categories;
                 return View("Create", data);
             }
             Pizza newPizza = new Pizza();
 
-            newPizza.Name = data.Name;
-            newPizza.Description = data.Description;
-            newPizza.Price = data.Price;
-            newPizza.PhotoUrl = data.PhotoUrl;
+            newPizza.Name = data.Pizza.Name;
+            newPizza.Description = data.Pizza.Description;
+            newPizza.Price = data.Pizza.Price;
+            newPizza.PhotoUrl = data.Pizza.PhotoUrl;
+
+            newPizza.CategoryId = data.Pizza.CategoryId;
 
             _myDatabase.Pizzas.Add(newPizza);
             _myDatabase.SaveChanges();
@@ -68,7 +72,14 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
         public IActionResult Create()
         {
             _myLogger.WriteLog("Admin visit create new pizza page", "CREATE");
-            return View("Create");
+
+            List<Category> categories = _myDatabase.Categories.ToList();
+
+            PizzaFormModel model = new PizzaFormModel();
+            model.Pizza = new Pizza();
+            model.Categories = categories;
+
+            return View("Create", model);
         }
 
         [HttpGet]
