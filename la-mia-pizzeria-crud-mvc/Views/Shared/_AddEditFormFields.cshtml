@@ -40,6 +40,14 @@
         </select>
     </div>
 }
+@if (Model.Ingredients != null && Model.Ingredients.Count > 0)
+{
+    <div class="d-flex align-items-center mb-3">
+        <strong>Category:</strong>
+        <select asp-for="SelectedIngredientsId" multiple="multiple" size="10" class="form-control ms-2" asp-items="@Model.Ingredients">
+        </select>
+    </div>
+}
 <div class="text-end">
     <input type="submit" class="btn btn-small btn-secondary" value="Save">
 </div>

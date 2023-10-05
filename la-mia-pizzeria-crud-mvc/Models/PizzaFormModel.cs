@@ -8,6 +8,6 @@ namespace la_mia_pizzeria_crud_mvc.Models
         public List<Category>? Categories { get; set; }
 
         public List<SelectListItem>? Ingredients { get; set; }
-        public List<string>? SelectedIngredients { get; set; }
+        public List<string>? SelectedIngredientsId { get; set; }
     }
 }

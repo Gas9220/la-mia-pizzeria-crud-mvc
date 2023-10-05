@@ -2,6 +2,7 @@
 using la_mia_pizzeria_crud_mvc.Database;
 using la_mia_pizzeria_crud_mvc.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace la_mia_pizzeria_crud_mvc.Controllers
@@ -52,8 +53,25 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
             {
                 List<Category> categories = _myDatabase.Categories.ToList();
                 data.Categories = categories;
+
+                List<SelectListItem> ingredientsList = new List<SelectListItem>();
+                List<Ingredient> databaseIngredients = _myDatabase.Ingredients.ToList();
+
+                foreach (Ingredient ingredient in databaseIngredients)
+                {
+                    ingredientsList.Add(new SelectListItem()
+                    {
+                        Text = ingredient.Name,
+                        Value = ingredient.Id.ToString()
+                    });
+                }
+
+                data.Ingredients = ingredientsList;
                 return View("Create", data);
             }
+
+            data.Pizza.Ingredients = new List<Ingredient>();
+
             Pizza newPizza = new Pizza();
 
             newPizza.Name = data.Pizza.Name;
@@ -62,6 +80,20 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
             newPizza.PhotoUrl = data.Pizza.PhotoUrl;
 
             newPizza.CategoryId = data.Pizza.CategoryId;
+
+            if (data.SelectedIngredientsId != null)
+            {
+                foreach (string selectedIngredientId in data.SelectedIngredientsId)
+                {
+                    int selectedIntIngredientId = int.Parse(selectedIngredientId);
+                    Ingredient? ingredient = _myDatabase.Ingredients.Where(ingredient => ingredient.Id == selectedIntIngredientId).FirstOrDefault();
+
+                    if (ingredient != null)
+                    {
+                       data.Pizza.Ingredients.Add(ingredient);
+                    }
+                }
+            }
 
             _myDatabase.Pizzas.Add(newPizza);
             _myDatabase.SaveChanges();
@@ -75,10 +107,22 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
             _myLogger.WriteLog("Admin visit create new pizza page", "CREATE");
 
             List<Category> categories = _myDatabase.Categories.ToList();
+            List<Ingredient> ingredients = _myDatabase.Ingredients.ToList();
+            List<SelectListItem> ingredientsList = new List<SelectListItem>();
+
+            foreach (Ingredient ingredient in ingredients)
+            {
+                ingredientsList.Add(new SelectListItem()
+                {
+                    Text = ingredient.Name,
+                    Value = ingredient.Id.ToString()
+                });
+            }
 
             PizzaFormModel model = new PizzaFormModel();
             model.Pizza = new Pizza();
             model.Categories = categories;
+            model.Ingredients = ingredientsList;
 
             return View("Create", model);
         }
