@@ -1,4 +1,5 @@
-﻿using la_mia_pizzeria_crud_mvc.CustomLoggers;
+﻿using Azure;
+using la_mia_pizzeria_crud_mvc.CustomLoggers;
 using la_mia_pizzeria_crud_mvc.Database;
 using la_mia_pizzeria_crud_mvc.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -130,7 +131,7 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
         {
             _myLogger.WriteLog("Admin visit edit new pizza page", "EDIT");
 
-            Pizza? pizzaToEdit = _myDatabase.Pizzas.Where(pizza => pizza.Id == id).FirstOrDefault();
+            Pizza? pizzaToEdit = _myDatabase.Pizzas.Where(pizza => pizza.Id == id).Include(pizza => pizza.Ingredients).FirstOrDefault();
 
             if (pizzaToEdit == null)
             {
@@ -139,10 +140,30 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
             else
             {
                 List<Category> categories = _myDatabase.Categories.ToList();
-                PizzaFormModel model = new PizzaFormModel();
-                model.Pizza = pizzaToEdit;
-                model.Categories = categories;
-                return View(model);
+
+                List<Ingredient> ingredientsList = _myDatabase.Ingredients.ToList();
+                List<SelectListItem> selectListIngredients = new List<SelectListItem>();
+
+                foreach (Ingredient ingredient in ingredientsList)
+                {
+                    selectListIngredients.Add(new SelectListItem
+                    {
+                        Value = ingredient.Id.ToString(),
+                        Text = ingredient.Name,
+                        Selected = pizzaToEdit.Ingredients.Any(tagId => tagId.Id == ingredient.Id)
+                    });
+
+                }
+
+                PizzaFormModel model
+                    = new PizzaFormModel
+                    {
+                        Pizza = pizzaToEdit,
+                        Categories = categories,
+                        Ingredients = selectListIngredients
+                    };
+
+                return View("Edit", model);
             }
         }
 
@@ -156,18 +177,49 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
             {
                 List<Category> categories = _myDatabase.Categories.ToList();
                 data.Categories = categories;
+
+                List<Ingredient> databaseIngredients = _myDatabase.Ingredients.ToList();
+                List<SelectListItem> ingredientsList = new List<SelectListItem>();
+
+                foreach (Ingredient ingredient in databaseIngredients)
+                {
+                    ingredientsList.Add(new SelectListItem()
+                    {
+                        Text = ingredient.Name,
+                        Value = ingredient.Id.ToString()
+                    });
+                }
+
+                data.Ingredients = ingredientsList;
                 return View("Edit", data);
             }
 
-            Pizza? pizzaToEdit = _myDatabase.Pizzas.Where(pizza => pizza.Id == id).FirstOrDefault();
+            Pizza? pizzaToEdit = _myDatabase.Pizzas.Where(pizza => pizza.Id == id).Include(pizza => pizza.Ingredients).FirstOrDefault();
 
             if (pizzaToEdit != null)
             {
+                pizzaToEdit.Ingredients.Clear();
+
                 pizzaToEdit.Name = data.Pizza.Name;
                 pizzaToEdit.Description = data.Pizza.Description;
                 pizzaToEdit.Price = data.Pizza.Price;
                 pizzaToEdit.PhotoUrl = data.Pizza.PhotoUrl;
                 pizzaToEdit.CategoryId = data.Pizza.CategoryId;
+
+                if (data.SelectedIngredientsId != null)
+                {
+                    foreach (string selectedIngredientId in data.SelectedIngredientsId)
+                    {
+                        int intSelectedIngredientId = int.Parse(selectedIngredientId);
+
+                        Ingredient? IngredientInDb = _myDatabase.Ingredients.Where(Ingredient => Ingredient.Id == intSelectedIngredientId).FirstOrDefault();
+
+                        if (IngredientInDb != null)
+                        {
+                            pizzaToEdit.Ingredients.Add(IngredientInDb);
+                        }
+                    }
+                }
 
                 _myDatabase.SaveChanges();
 

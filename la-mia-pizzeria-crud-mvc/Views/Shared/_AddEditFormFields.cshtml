@@ -43,7 +43,7 @@
 @if (Model.Ingredients != null && Model.Ingredients.Count > 0)
 {
     <div class="d-flex align-items-center mb-3">
-        <strong>Category:</strong>
+        <strong>Ingredients:</strong>
         <select asp-for="SelectedIngredientsId" multiple="multiple" size="10" class="form-control ms-2" asp-items="@Model.Ingredients">
         </select>
     </div>
