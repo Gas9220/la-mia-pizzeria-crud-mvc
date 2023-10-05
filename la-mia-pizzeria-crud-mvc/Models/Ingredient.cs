@@ -3,5 +3,6 @@
     public class Ingredient
     {
         public string Name { get; set; }
+        public List<Pizza>? Pizzas { get; set; }
     }
 }

@@ -30,6 +30,8 @@ namespace la_mia_pizzeria_crud_mvc.Models
         public int? CategoryId { get; set; }
         public Category? Category { get; set; }
 
+        public List<Ingredient>? Ingredients { get; set; }
+
         public Pizza() { }
 
         public Pizza(int id, string name, string photoUrl, string description, float price) { 
