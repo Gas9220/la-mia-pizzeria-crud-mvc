@@ -1,5 +1,19 @@
 ﻿@model Pizza
 
+@{
+    string GetIngredientsListName(List<Ingredient> ingredients)
+    {
+        var listOfStrings = new List<string>();
+
+        foreach(var ingredient in ingredients)
+        {
+            listOfStrings.Add(ingredient.Name);
+        }
+
+        return String.Join(", ", listOfStrings);
+    }
+}
+
 <div class="d-flex pt-2 align-items-center justify-content-between">
     <a class="btn btn-secondary btn-sm me-2" href="@Url.Action("Index")">
         Back
@@ -24,6 +38,18 @@
                 @if (Model.Category != null)
                 {
                     <h6>Category: @Model.Category.Name</h6>
+                } else
+                {
+                    <h6>Category: "Not Specified"</h6>
+                }
+
+                @if (Model.Ingredients != null && Model.Ingredients.Count > 0)
+                {
+                    <h6>Ingredients: @GetIngredientsListName(Model.Ingredients.ToList())</h6>
+                }
+                else
+                {
+                    <h6>Ingredients: "Not Specified"</h6>
                 }
                 <p class="mb-1">Description: @Model.Description</p>
                 <span>Price: @Model.Price €</span>

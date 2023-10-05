@@ -31,7 +31,7 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
         {
             _myLogger.WriteLog($"Admin visit details page for {id}", "READ");
 
-            Pizza? foundedPizza = _myDatabase.Pizzas.Where(pizza => pizza.Id == id).Include(pizza => pizza.Category).FirstOrDefault();
+            Pizza? foundedPizza = _myDatabase.Pizzas.Where(pizza => pizza.Id == id).Include(pizza => pizza.Category).Include(pizza => pizza.Ingredients).FirstOrDefault();
 
             if (foundedPizza == null)
             {
@@ -70,15 +70,13 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
                 return View("Create", data);
             }
 
-            data.Pizza.Ingredients = new List<Ingredient>();
-
             Pizza newPizza = new Pizza();
 
             newPizza.Name = data.Pizza.Name;
             newPizza.Description = data.Pizza.Description;
             newPizza.Price = data.Pizza.Price;
             newPizza.PhotoUrl = data.Pizza.PhotoUrl;
-
+            newPizza.Ingredients = new List<Ingredient>();
             newPizza.CategoryId = data.Pizza.CategoryId;
 
             if (data.SelectedIngredientsId != null)
@@ -90,7 +88,7 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
 
                     if (ingredient != null)
                     {
-                       data.Pizza.Ingredients.Add(ingredient);
+                        newPizza.Ingredients.Add(ingredient);
                     }
                 }
             }
