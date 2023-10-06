@@ -2,12 +2,14 @@
 using la_mia_pizzeria_crud_mvc.CustomLoggers;
 using la_mia_pizzeria_crud_mvc.Database;
 using la_mia_pizzeria_crud_mvc.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace la_mia_pizzeria_crud_mvc.Controllers
 {
+    [Authorize(Roles = "ADMIN, USER")]
     public class PizzaController : Controller
     {
         private ICustomLogger _myLogger;
@@ -28,6 +30,8 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
             return View("Index", pizzas);
         }
 
+        [Authorize]
+        [HttpGet]
         public IActionResult Details(int id)
         {
             _myLogger.WriteLog($"Admin visit details page for {id}", "READ");
@@ -44,6 +48,7 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
             }
         }
 
+        [Authorize(Roles = "ADMIN")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(PizzaFormModel data)
@@ -100,6 +105,7 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "ADMIN")]
         [HttpGet]
         public IActionResult Create()
         {
