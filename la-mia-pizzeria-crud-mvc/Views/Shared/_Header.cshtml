@@ -25,16 +25,13 @@
             <ul class="navbar-bar d-flex ms-auto mb-1 list-unstyled">
                 <partial name="_LoginPartial" />
 
-                @if (User.Identity.IsAuthenticated)
+                @if (User.Identity.IsAuthenticated && User.IsInRole("ADMIN"))
                 {
-                    @if (User.IsInRole("ADMIN"))
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="@Url.Action("Index", "Pizza")">
-                                <span>Admin</span>
-                            </a>
-                        </li>
-                    }
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="@Url.Action("Index", "Pizza")">
+                            <span>Admin</span>
+                        </a>
+                    </li>
                     <li class="nav-item ms-3">
                         <a class="nav-link text-white" href="@Url.Action("Index", "Home")">
                             <span>User</span>
