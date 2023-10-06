@@ -28,6 +28,7 @@ namespace la_mia_pizzeria_crud_mvc
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
